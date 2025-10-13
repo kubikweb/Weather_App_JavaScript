@@ -6,7 +6,7 @@ My project "Weather App - JavaScript" was created during Coders Lab course. This
 I used HTML, SCSS, RWD, JavaScript, jQuery, AJAX and external API: https://ipapi.co/json/ | https://graphhopper.com | https://darksky.net/dev 
 
 ## Usage
-To start using this app click here: https://kamila-kubik.github.io/Weather_App_JavaScript/.
+To start using this app click [here](https://kubikweb.github.io/Weather_App_JavaScript/).
  
 ## About
 Weather App shows you current temperature, wind speed, pressure, humidity, special icons and the
