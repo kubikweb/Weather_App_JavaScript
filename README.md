@@ -13,13 +13,13 @@ Weather App shows you current temperature, wind speed, pressure, humidity, speci
 weather forecast for next three days of the city that you enter in searching area. The first screen shows you current weather based on your IP address.
 
 First Screen
-![Weather App - FirstPage](./images/screen/1.png)
+![Weather App - FirstPage](./docs/images/screen1.png)
 
 Searching area
-![Weather App - SearchingArea](./images/screen/2.png)
+![Weather App - SearchingArea](./docs/images/screen2.png)
 
 Result of searching
-![Weather App - ResultOfSearching](./images/screen/3.png)
+![Weather App - ResultOfSearching](./docs/images/screen3.png)
 
 See you next time!
 

@@ -1,32 +1,27 @@
-const webpack = require('webpack');
 const path = require("path");
 const Html = require("html-webpack-plugin");
 const MiniCSS = require("mini-css-extract-plugin");
 const Compression = require("compression-webpack-plugin");
-const Clean = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = function(env) {
+module.exports = function(env, argv) {
   const config = {};
-
-  const isDev = env.dev ? true : false;
-  const isProd = env.prod ? true : false;
+  const isProd = argv.mode === 'production';
+  const isDev = !isProd;
   
   config.entry = `./src/app.js`;
   config.output = {
-    filename: isDev ? "[name].js" : "[name].[chunkhash].js",
-    path: path.resolve(__dirname, "build"),
-    publicPath: ''
+    filename: isDev ? "[name].js" : "[name].[contenthash].js",
+    path: path.resolve(__dirname, "dist"),
+    publicPath: '/Weather_App_JavaScript/',
+    assetModuleFilename: 'images/[name].[hash][ext]',
+    clean: true,
   };
 
   config.devtool = isProd ? false : "source-map";
 
   config.module = {};
   config.module.rules = [];
-
-  const browsers = {
-    dev: ["Chrome > 60"],
-    prod: ["> 3%"]
-  };
 
   const js = {
     test: /\.js$/,
@@ -36,12 +31,7 @@ module.exports = function(env) {
       options: {
         presets: [
           [
-            "@babel/preset-env",
-            {
-              targets: {
-                browsers: isDev ? browsers.dev : browsers.prod
-              }
-            }
+            "@babel/preset-env"
           ]
         ]
       }
@@ -62,11 +52,11 @@ module.exports = function(env) {
       {
         loader: "postcss-loader",
         options: {
-          plugins: () => [
-            new require("autoprefixer")({
-              browsers: isProd ? browsers.prod : browsers.dev
-            })
-          ]
+          postcssOptions: {
+            plugins: [
+              require("autoprefixer")
+            ]
+          }
         }
       },
       "sass-loader"
@@ -76,28 +66,19 @@ module.exports = function(env) {
   config.module.rules.push(scss);
 
   const images = {
-    test: /\.(jpg|jpeg|gif|png|csv)$/,
-    use: {
-      loader: "file-loader",
-      options: {
-        name: isProd ? "[name].[hash].[ext]" : "[name].[ext]",
-        publicPath: "images",
-        outputPath: "images"
-      }
+    test: /\.(jpg|jpeg|gif|png|svg|csv)$/,
+    type: 'asset/resource',
+    generator: {
+      filename: 'images/[name][ext]'
     }
   };
-
   config.module.rules.push(images);
 
   const fonts = {
     test: /\.(eot|ttf|woff|woff2)$/,
-    use: {
-      loader: "file-loader",
-      options: {
-        name: isProd ? "[name].[hash].[ext]" : "[name].[ext]",
-        publicPath: "fonts",
-        outputPath: "fonts"
-      }
+    type: 'asset/resource',
+    generator: {
+      filename: 'fonts/[name][ext]'
     }
   };
 
@@ -109,12 +90,24 @@ module.exports = function(env) {
     new Html({
       filename: "index.html",
       template: `./index.html`,
-      minify: false
+      minify: isProd
+    })
+  );
+
+  config.plugins.push(
+    new CopyPlugin({
+      patterns: [
+        { 
+          from: "src/images", 
+          to: "images",
+          noErrorOnMissing: true
+        }
+      ]
     })
   );
 
   if (isProd) {
-    config.plugins.push(new MiniCSS({ filename: "app.[chunkhash].css" }));
+    config.plugins.push(new MiniCSS({ filename: "app.[contenthash].css" }));
 
     config.plugins.push(
       new Compression({
@@ -122,15 +115,12 @@ module.exports = function(env) {
         minRatio: 0.8
       })
     );
-
-    config.plugins.push(new Clean(["build"]));
   }
 
   if (isDev) {
     config.devServer = {
       port: 8080,
-      progress: true,
-      overlay: true,
+      hot: true,
       historyApiFallback: true
     };
   }
