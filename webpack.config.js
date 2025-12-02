@@ -13,7 +13,7 @@ module.exports = function(env, argv) {
   config.output = {
     filename: isDev ? "[name].js" : "[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: '/Weather_App_JavaScript/',
+    publicPath: './',
     assetModuleFilename: 'images/[name].[hash][ext]',
     clean: true,
   };
