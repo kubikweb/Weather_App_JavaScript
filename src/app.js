@@ -71,10 +71,10 @@ function createWeather (check){
         change.attr("src", "./images/icons/arrow-up.svg");
     }
     const wind = $(".clone .wind");
-    const km = (check.windSpeed * 1.609344).toFixed(2);
+    const km = check.windSpeed.toFixed(2);
     wind.text(km + " km/h");
     const humid = $(".clone .humidity");
-    humid.text((check.humidity*100).toFixed(0) + " %");
+    humid.text(check.humidity.toFixed(0) + " %");
     const zoneT = $(".clone .time_zone");
     zoneT.text(check.zone);
 
